@@ -19,6 +19,10 @@ def main():
 
                 # Add your attendance processing logic here
 
+
+                # Export logs to default filename (timestamp-based)
+                manager.export_clocking_logs()
+
         except Exception as e:
             print(f"Error during operation: {e}")
         finally:

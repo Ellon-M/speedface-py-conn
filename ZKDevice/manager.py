@@ -1,5 +1,7 @@
 import os
 from dotenv import load_dotenv
+import csv
+from datetime import datetime
 from zk import ZK, const
 import mysql.connector
 from mysql.connector import Error
@@ -32,6 +34,11 @@ class ZKDeviceManager:
         self.conn = None
         self.zk = None
         self.db_connection = None
+
+        self.log_dir = os.getenv('LOG_DIR', './logs')
+    
+        # Create log directory if it doesn't exist
+        os.makedirs(self.log_dir, exist_ok=True)
         
         print(f"Initializing ZKDeviceManager for device at {self.ip}:{self.port}")
 
@@ -100,11 +107,39 @@ class ZKDeviceManager:
         try:
             print("Fetching attendance records from device...")
             attendances = self.conn.get_attendance()
+
+            # if not attendances:
+            #     print("Trying flash memory read...")
+            #     self.conn.read_attendance_log()  # Special command for some devices
+            #     attendances = self.conn.get_attendance()
+
             print(f"Successfully retrieved {len(attendances)} attendance records")
             return attendances
         except Exception as e:
             print(f"Error fetching attendance records: {e}")
             return None
+
+    def brute_get_attendances(self):
+        """Retrieve all attendance records from the device using brute force method"""
+        try:
+            attendances = []
+            self.conn.enable_device()
+            self.conn.test_voice()  # Wake up device
+        
+            # Manually read records in batches
+            for i in range(1000):  # Adjust max records as needed
+                try:
+                    data = self.conn.read_sized_packet()
+                    if b'attendance' in data:  # Check packet signature
+                        attendances.append(self.conn._parse_attendance(data))
+                except:
+                    break
+                
+            return attendances
+        except Exception as e:
+            print(f"Manual read failed: {e}")
+            return None
+
 
     def connect_to_db(self):
         """Establish connection to MySQL database"""
@@ -188,3 +223,58 @@ class ZKDeviceManager:
             if self.db_connection:
                 self.db_connection.close()
                 print("Closed database connection")
+
+    def export_clocking_logs(self, filename=None):
+        """
+        Export attendance logs to a CSV file in the configured log directory
+        Args:
+            filename (str): Optional custom filename (appended to LOG_DIR)
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        if not self.conn:
+            print("No active device connection")
+            return False
+
+        try:
+            if not filename:
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"clocking_logs_{timestamp}.csv"
+
+            log_path = os.path.join(self.log_dir, filename)
+
+            print(f"Exporting clocking logs to {log_path}...")
+
+            # Get attendance records
+            attendances = self.get_attendances()
+            if not attendances:
+                print("No attendance records found")
+                return False
+
+            # Ensure directory exists
+            os.makedirs(self.log_dir, exist_ok=True)
+
+            # Write to CSV
+            with open(log_path, mode='w', newline='', encoding='utf-8') as file:
+                writer = csv.writer(file)
+                # Write header
+                writer.writerow(['User ID', 'Timestamp', 'Status', 'Device IP', 'Verify Mode'])
+
+                # Write records
+                for record in attendances:
+                    writer.writerow([
+                        record.user_id,
+                        record.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+                        record.status,  # 0=Check-in, 1=Check-out
+                        self.ip,
+                    ])
+
+            print(f"Successfully exported {len(attendances)} records to {log_path}")
+            return True
+
+        except PermissionError:
+            print(f"Permission denied when writing to {log_path}")
+            return False
+        except Exception as e:
+            print(f"Error exporting clocking logs: {str(e)}")
+            return False
