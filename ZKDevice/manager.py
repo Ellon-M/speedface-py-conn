@@ -258,7 +258,7 @@ class ZKDeviceManager:
             with open(log_path, mode='w', newline='', encoding='utf-8') as file:
                 writer = csv.writer(file)
                 # Write header
-                writer.writerow(['User ID', 'Timestamp', 'Status', 'Device IP', 'Verify Mode'])
+                writer.writerow(['User ID', 'Timestamp', 'Status', 'Device IP'])
 
                 # Write records
                 for record in attendances:

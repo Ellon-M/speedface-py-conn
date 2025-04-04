@@ -1,4 +1,4 @@
-User ID,Timestamp,Status,Device IP,Verify Mode
+User ID,Timestamp,Status,Device IP
 2,2025-04-04 17:50:57,25,192.168.1.20
 1,2025-04-04 17:50:59,15,192.168.1.20
 1,2025-04-04 17:58:08,15,192.168.1.20
