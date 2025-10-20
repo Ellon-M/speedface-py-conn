@@ -1,22 +1,25 @@
 import os
+import requests
 from dotenv import load_dotenv
 import csv
-from datetime import datetime, time, timedelta
-from zk import ZK, const
+from datetime import datetime, timedelta
 import mysql.connector
 from mysql.connector import Error
 
 load_dotenv()
 
-class ZKDeviceManager:
+class HikVisionDeviceManager:
     
-    def __init__(self, ip=None, port=4370, timeout=5):
-        self.ip = os.getenv('ZK_DEVICE_IP', '192.168.1.20')
-        self.port = int(os.getenv('ZK_DEVICE_PORT', 4370))
-        self.timeout = int(os.getenv('ZK_TIMEOUT', 5))
-        self.device_location = os.getenv('ZK_DEVICE_LOCATION', 'Main Exit')
-        self.conn = None
-        self.zk = None
+    def __init__(self, ip=None, port=80, timeout=10):
+        self.ip = os.getenv('HIK_DEVICE_IP', '192.168.1.30')
+        self.port = int(os.getenv('HIK_DEVICE_PORT', 80))
+        self.username = os.getenv('HIK_USERNAME', 'admin')
+        self.password = os.getenv('HIK_PASSWORD', '')
+        self.timeout = int(os.getenv('HIK_TIMEOUT', 10))
+        self.device_location = os.getenv('HIK_DEVICE_LOCATION', 'Main Entrance')
+        
+        self.base_url = f"http://{self.ip}:{self.port}/ISAPI"
+        self.session = None
         
         self.db_config = {
             'host': os.getenv('DB_HOST', 'localhost'),
@@ -29,7 +32,7 @@ class ZKDeviceManager:
         self.log_dir = os.getenv('LOG_DIR', './logs')
         os.makedirs(self.log_dir, exist_ok=True)
         
-        print(f"Initializing ZKDeviceManager for EXIT reader at {self.ip}:{self.port}")
+        print(f"Initializing HikVisionDeviceManager for ENTRY reader at {self.ip}:{self.port}")
 
     def connect_to_db(self):
         """Establish connection to MySQL database"""
@@ -97,11 +100,11 @@ class ZKDeviceManager:
         Based on whether it's the first IN or last OUT for the shift day
         """
         if not shift_info:
-            return 'OUT', False, False
+            return 'IN', False, False
             
         db_connection = self.connect_to_db()
         if not db_connection:
-            return 'OUT', False, False
+            return 'IN', False, False
             
         try:
             cursor = db_connection.cursor()
@@ -113,59 +116,59 @@ class ZKDeviceManager:
                 shift_info['end_time']
             )
             
-            # For ZK device (EXIT), we're looking for the last OUT event of the shift day
-            # Check if this is the last OUT event for this user's shift day
+            # For HikVision device (ENTRY), we're looking for the first IN event of the shift day
+            # Check if this is the first IN event for this user's shift day
             cursor.execute("""
                 SELECT timestamp 
-                FROM attendance
+                FROM attendance 
                 WHERE user_id = %s 
                 AND DATE(timestamp) = %s
-                AND device_type = 'ZK'
-                AND event_type = 'OUT'
-                ORDER BY timestamp DESC 
+                AND device_type = 'HIKVISION'
+                AND event_type = 'IN'
+                ORDER BY timestamp ASC 
                 LIMIT 1
             """, (user_id, shift_date))
             
             result = cursor.fetchone()
-            is_shift_end = False
+            is_shift_start = False
             
             if result:
-                # If this timestamp is later than or equal to the last recorded OUT
-                existing_last_out = result[0]
-                if timestamp >= existing_last_out:
-                    is_shift_end = True
-                    # Update previous records to remove shift_end flag
+                # If this timestamp is earlier than or equal to the first recorded IN
+                existing_first_in = result[0]
+                if timestamp <= existing_first_in:
+                    is_shift_start = True
+                    # Update previous records to remove shift_start flag
                     cursor.execute("""
                         UPDATE attendance 
-                        SET is_shift_end = FALSE 
+                        SET is_shift_start = FALSE 
                         WHERE user_id = %s 
                         AND DATE(timestamp) = %s
-                        AND is_shift_end = TRUE
+                        AND is_shift_start = TRUE
                     """, (user_id, shift_date))
             else:
-                # First OUT record for this shift day
-                is_shift_end = True
+                # First IN record for this shift day
+                is_shift_start = True
             
-            return 'OUT', False, is_shift_end
+            return 'IN', is_shift_start, False
             
         except Error as e:
             print(f"Error determining shift event: {e}")
-            return 'OUT', False, False
+            return 'IN', False, False
         finally:
             if db_connection:
                 db_connection.close()
 
     def test_connections(self):
         """Test both device and database connections"""
-        print("\nTesting ZKTeco connections...")
+        print("\nTesting HikVision connections...")
         print(f"Device Target: {self.ip}:{self.port}")
         print(f"Database Target: {self.db_config['host']}:{self.db_config['port']}")
         
         if self.connect_to_device():
-            print("✓ ZKTeco device connection successful")
+            print("✓ HikVision device connection successful")
             self.disconnect_from_device()
         else:
-            print("✗ ZKTeco device connection failed")
+            print("✗ HikVision device connection failed")
         
         db_conn = self.connect_to_db()
         if db_conn:
@@ -175,66 +178,89 @@ class ZKDeviceManager:
             print("✗ Database connection failed")
 
     def connect_to_device(self):
-        """Establish connection to the ZKTeco device"""
+        """Establish connection to the HikVision device"""
         try:
-            print("Attempting to connect to ZKTeco device...")
-            self.zk = ZK(self.ip, port=self.port, timeout=self.timeout)
-            self.conn = self.zk.connect()
-            print("Successfully connected to ZKTeco device!")
-            return True
+            print("Attempting to connect to HikVision device...")
+            self.session = requests.Session()
+            self.session.auth = (self.username, self.password)
+            self.session.timeout = self.timeout
+            
+            response = self.session.get(f"{self.base_url}/System/deviceInfo")
+            if response.status_code == 200:
+                print("Successfully connected to HikVision device!")
+                return True
+            else:
+                print(f"Failed to connect to HikVision device. Status: {response.status_code}")
+                return False
+                
         except Exception as e:
-            print(f"Failed to connect to ZKTeco device: {e}")
+            print(f"Failed to connect to HikVision device: {e}")
             return False
 
     def disconnect_from_device(self):
-        """Terminate the connection"""
-        if self.conn:
-            try:
-                self.conn.disconnect()
-                print("Disconnected from ZKTeco device")
-            except Exception as e:
-                print(f"Error disconnecting from ZKTeco device: {e}")
-        else:
-            print("No active ZKTeco connection to disconnect")
+        """Close the session"""
+        if self.session:
+            self.session.close()
+            print("Disconnected from HikVision device")
 
     def get_attendances(self):
-        """Retrieve all attendance records from the device"""
-        if not self.conn:
-            print("No active connection to ZKTeco device")
+        """Retrieve all attendance records from the HikVision device"""
+        if not self.session:
+            print("No active connection to HikVision device")
             return None
             
         try:
-            print("Fetching attendance records from ZKTeco device...")
-            attendances = self.conn.get_attendance()
-            print(f"Successfully retrieved {len(attendances)} attendance records from ZKTeco")
-            return attendances
+            print("Fetching attendance records from HikVision device...")
+            
+            # Get events from last 24 hours
+            end_time = datetime.now()
+            start_time = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            
+            start_time_str = start_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+            end_time_str = end_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+            
+            url = f"{self.base_url}/AccessControl/AcsEvent?format=json"
+            
+            payload = {
+                "AcsEventCond": {
+                    "searchID": "1",
+                    "searchResultPosition": 0,
+                    "maxResults": 10000,
+                    "major": 5,
+                    "minor": 1,
+                    "startTime": start_time_str,
+                    "endTime": end_time_str
+                }
+            }
+            
+            response = self.session.post(url, json=payload)
+            
+            if response.status_code == 200:
+                events_data = response.json()
+                events = events_data.get('AcsEvent', {}).get('InfoList', [])
+                
+                if isinstance(events, dict):
+                    events = [events]
+                    
+                print(f"Successfully retrieved {len(events)} attendance records from HikVision")
+                return events
+            else:
+                print(f"Error fetching HikVision attendance. Status: {response.status_code}")
+                return None
+                
         except Exception as e:
-            print(f"Error fetching attendance records from ZKTeco: {e}")
+            print(f"Error fetching attendance from HikVision: {e}")
             return None
 
-    def map_status_description(self, status_code):
-        """Map ZKTeco status codes to descriptions only"""
-        status_mapping = {
-            0: "Check-in",
-            1: "Check-out", 
-            15: "Check-in",
-            25: "Check-out",
-            4: "Overtime-in",
-            5: "Overtime-out",
-            8: "Break-out",
-            9: "Break-in"
-        }
-        return status_mapping.get(status_code, "Unknown")
-
     def store_attendance_to_db(self):
-        """Store attendance records from ZKTeco device to database with shift logic"""
+        """Store attendance records from HikVision device to database with shift logic"""
         db_connection = self.connect_to_db()
         if not db_connection:
             return False
             
         attendances = self.get_attendances()
         if not attendances:
-            print("No attendance records found on ZKTeco device")
+            print("No attendance records found on HikVision device")
             db_connection.close()
             return False
             
@@ -244,27 +270,38 @@ class ZKDeviceManager:
             # Update device last sync
             cursor.execute("""
                 INSERT INTO devices (device_type, device_ip, device_location, purpose, last_sync, status)
-                VALUES ('ZK', %s, %s, 'EXIT', NOW(), 'ONLINE')
+                VALUES ('HIKVISION', %s, %s, 'ENTRY', NOW(), 'ONLINE')
                 ON DUPLICATE KEY UPDATE last_sync = NOW(), status = 'ONLINE'
             """, (self.ip, self.device_location))
             
             new_records_count = 0
             duplicate_records_count = 0
             error_records_count = 0
-            shift_end_records = 0
+            shift_start_records = 0
             
             for record in attendances:
                 try:
+                    user_id = record.get('employeeNoString', 'Unknown')
+                    timestamp_str = record.get('time', '')
+                    
+                    if not timestamp_str:
+                        continue
+                        
+                    # Parse timestamp
+                    timestamp_str = timestamp_str.split('+')[0]
+                    timestamp = datetime.strptime(timestamp_str, "%Y-%m-%dT%H:%M:%S")
+                    
                     # Get user shift information
-                    shift_info = self.get_user_shift_info(record.user_id)
+                    shift_info = self.get_user_shift_info(user_id)
                     
                     # Determine event type and shift flags
                     event_type, is_shift_start, is_shift_end = self.determine_shift_event(
-                        record.user_id, record.timestamp, shift_info
+                        user_id, timestamp, shift_info
                     )
                     
-                    # Get user details
-                    employee_name = f"User_{record.user_id}"
+                    # Get additional info
+                    employee_name = record.get('name', f"User_{user_id}")
+                    verification_mode = record.get('verificationMode', 'Face')
                     shift_id = None
                     shift_name = None
                     
@@ -273,26 +310,22 @@ class ZKDeviceManager:
                         shift_id = shift_info['shift_id']
                         shift_name = shift_info['shift_name']
                     
-                    # Map status description
-                    status_description = self.map_status_description(record.status)
-                    
-                    # Insert attendance record
                     cursor.execute("""
                         INSERT INTO attendance (
                             user_id, employee_name, timestamp, event_type, 
-                            status_code, status_description, device_type, 
-                            device_ip, device_location, verification_mode,
+                            status_description, device_type, device_ip, 
+                            device_location, verification_mode,
                             shift_id, shift_name, is_shift_start, is_shift_end
-                        ) VALUES (%s, %s, %s, %s, %s, %s, 'ZK', %s, %s, 'Face', %s, %s, %s, %s)
+                        ) VALUES (%s, %s, %s, %s, %s, 'HIKVISION', %s, %s, %s, %s, %s, %s, %s)
                     """, (
-                        record.user_id,
+                        user_id,
                         employee_name,
-                        record.timestamp,
+                        timestamp,
                         event_type,
-                        record.status,
-                        status_description,
+                        'Check-in',
                         self.ip,
                         self.device_location,
+                        verification_mode,
                         shift_id,
                         shift_name,
                         is_shift_start,
@@ -300,25 +333,25 @@ class ZKDeviceManager:
                     ))
                     
                     new_records_count += 1
-                    if is_shift_end:
-                        shift_end_records += 1
-                        
+                    if is_shift_start:
+                        shift_start_records += 1
+                    
                 except Error as e:
                     if 'unique_clock_record' in str(e):
                         duplicate_records_count += 1
                     else:
-                        print(f"Error inserting record for user {record.user_id}: {e}")
+                        print(f"Error inserting HikVision record for user {user_id}: {e}")
                         error_records_count += 1
                 except Exception as e:
-                    print(f"Unexpected error for record {record.user_id}: {e}")
+                    print(f"Unexpected error for HikVision record {user_id}: {e}")
                     error_records_count += 1
             
             db_connection.commit()
-            print(f"ZKTeco attendance - New: {new_records_count}, Shift Ends: {shift_end_records}, Duplicates: {duplicate_records_count}, Errors: {error_records_count}")
+            print(f"HikVision attendance - New: {new_records_count}, Shift Starts: {shift_start_records}, Duplicates: {duplicate_records_count}, Errors: {error_records_count}")
             return new_records_count > 0
             
         except Error as e:
-            print(f"Error storing ZKTeco attendance to database: {e}")
+            print(f"Error storing HikVision attendance to database: {e}")
             return False
         finally:
             if db_connection:
@@ -328,104 +361,58 @@ class ZKDeviceManager:
         """Export attendance logs to CSV file"""
         if not filename:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"zkteco_attendance_{timestamp}.csv"
+            filename = f"hikvision_attendance_{timestamp}.csv"
 
         log_path = os.path.join(self.log_dir, filename)
 
-        print(f"Exporting ZKTeco attendance logs to {log_path}...")
+        print(f"Exporting HikVision attendance logs to {log_path}...")
 
         attendances = self.get_attendances()
         if not attendances:
-            print("No ZKTeco attendance records found")
+            print("No HikVision attendance records found")
             return False
 
         try:
             with open(log_path, mode='w', newline='', encoding='utf-8') as file:
                 writer = csv.writer(file)
                 writer.writerow([
-                    'User ID', 'Timestamp', 'Status Code', 'Status Description', 
-                    'Event Type', 'Device Type', 'Device IP', 'Device Location',
+                    'User ID', 'Timestamp', 'Employee Name', 'Event Type', 
+                    'Device Type', 'Device IP', 'Device Location', 'Verification Mode',
                     'Shift Start', 'Shift End'
                 ])
 
                 for record in attendances:
-                    status_description = self.map_status_description(record.status)
+                    user_id = record.get('employeeNoString', 'Unknown')
+                    timestamp = record.get('time', '')
+                    employee_name = record.get('name', '')
+                    verification_mode = record.get('verificationMode', 'Face')
                     
-                    # For CSV export, we'll determine shift events on the fly
-                    shift_info = self.get_user_shift_info(record.user_id)
+                    if timestamp:
+                        timestamp = timestamp.split('+')[0]
+                    
+                    # For CSV export, determine shift events
+                    shift_info = self.get_user_shift_info(user_id)
+                    timestamp_obj = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S") if timestamp else datetime.now()
                     event_type, is_shift_start, is_shift_end = self.determine_shift_event(
-                        record.user_id, record.timestamp, shift_info
+                        user_id, timestamp_obj, shift_info
                     )
                     
                     writer.writerow([
-                        record.user_id,
-                        record.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
-                        record.status,
-                        status_description,
+                        user_id,
+                        timestamp,
+                        employee_name,
                         event_type,
-                        'ZK',
+                        'HIKVISION',
                         self.ip,
                         self.device_location,
+                        verification_mode,
                         'Yes' if is_shift_start else 'No',
                         'Yes' if is_shift_end else 'No'
                     ])
 
-            print(f"Successfully exported {len(attendances)} ZKTeco records to {log_path}")
+            print(f"Successfully exported {len(attendances)} HikVision records to {log_path}")
             return True
 
         except Exception as e:
-            print(f"Error exporting ZKTeco logs: {str(e)}")
+            print(f"Error exporting HikVision logs: {str(e)}")
             return False
-
-    def sync_users_to_db(self):
-        """Sync users from ZKTeco device to database"""
-        if not self.conn:
-            print("No active connection to ZKTeco device")
-            return False
-            
-        db_connection = self.connect_to_db()
-        if not db_connection:
-            return False
-            
-        try:
-            cursor = db_connection.cursor()
-            users = self.conn.get_users()
-            
-            if not users:
-                print("No users found on ZKTeco device")
-                return False
-            
-            new_users_count = 0
-            updated_users_count = 0
-            
-            for user in users:
-                privilege = 'User'
-                if user.privilege == const.USER_ADMIN:
-                    privilege = 'Admin'
-                
-                cursor.execute("""
-                    INSERT INTO users (user_id, name, privilege, card_number, department)
-                    VALUES (%s, %s, %s, %s, %s)
-                    ON DUPLICATE KEY UPDATE 
-                        name = VALUES(name),
-                        privilege = VALUES(privilege),
-                        card_number = VALUES(card_number),
-                        department = VALUES(department),
-                        updated_at = CURRENT_TIMESTAMP
-                """, (user.user_id, user.name, privilege, user.password, user.group_id))
-                
-                if cursor.rowcount == 1:
-                    new_users_count += 1
-                else:
-                    updated_users_count += 1
-            
-            db_connection.commit()
-            print(f"ZKTeco users - New: {new_users_count}, Updated: {updated_users_count}")
-            return True
-            
-        except Exception as e:
-            print(f"Error syncing ZKTeco users: {e}")
-            return False
-        finally:
-            if db_connection:
-                db_connection.close()

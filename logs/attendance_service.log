@@ -1,0 +1,25 @@
+2025-10-20 16:49:08,747 - AttendanceService - INFO - Starting Attendance System Service
+2025-10-20 16:49:08,784 - AttendanceSystem - INFO - Attendance System initialized on Windows Server
+2025-10-20 16:49:08,784 - AttendanceSystem - INFO - Starting continuous attendance synchronization
+2025-10-20 16:49:08,784 - AttendanceSystem - INFO - Testing device connections...
+2025-10-20 16:49:53,412 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 16:49:53.412548
+2025-10-20 16:49:53,413 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 16:50:14,469 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 16:50:14,474 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 16:50:37,652 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 16:50:37,653 - AttendanceSystem - INFO - Synchronization completed in 44.24s - Success: 0, Errors: 2
+2025-10-20 16:50:37,653 - AttendanceSystem - WARNING - Consecutive errors: 1
+2025-10-20 16:51:37,680 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 16:51:37.679865
+2025-10-20 16:51:37,680 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 16:51:58,717 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 16:51:58,718 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 16:52:20,966 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 16:52:20,966 - AttendanceSystem - INFO - Synchronization completed in 43.29s - Success: 0, Errors: 2
+2025-10-20 16:52:20,966 - AttendanceSystem - WARNING - Consecutive errors: 2
+2025-10-20 16:53:20,998 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 16:53:20.998703
+2025-10-20 16:53:20,999 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 16:53:42,041 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 16:53:42,042 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 16:54:05,388 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 16:54:05,389 - AttendanceSystem - INFO - Synchronization completed in 44.39s - Success: 0, Errors: 2
+2025-10-20 16:54:05,389 - AttendanceSystem - WARNING - Consecutive errors: 3
