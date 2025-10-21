@@ -1,11 +1,11 @@
 2025-10-20 16:49:08,747 - AttendanceService - INFO - Starting Attendance System Service
-2025-10-20 16:49:08,784 - AttendanceSystem - INFO - Attendance System initialized on Windows Server
 2025-10-20 16:49:08,784 - AttendanceSystem - INFO - Starting continuous attendance synchronization
 2025-10-20 16:49:08,784 - AttendanceSystem - INFO - Testing device connections...
 2025-10-20 16:49:53,412 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 16:49:53.412548
 2025-10-20 16:49:53,413 - AttendanceSystem - INFO - Processing HikVision device...
 2025-10-20 16:50:14,469 - AttendanceSystem - ERROR - Failed to connect to HikVision
 2025-10-20 16:50:14,474 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 16:49:08,784 - AttendanceSystem - INFO - Attendance System initialized on Windows Server
 2025-10-20 16:50:37,652 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
 2025-10-20 16:50:37,653 - AttendanceSystem - INFO - Synchronization completed in 44.24s - Success: 0, Errors: 2
 2025-10-20 16:50:37,653 - AttendanceSystem - WARNING - Consecutive errors: 1
@@ -23,3 +23,163 @@
 2025-10-20 16:54:05,388 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
 2025-10-20 16:54:05,389 - AttendanceSystem - INFO - Synchronization completed in 44.39s - Success: 0, Errors: 2
 2025-10-20 16:54:05,389 - AttendanceSystem - WARNING - Consecutive errors: 3
+2025-10-20 16:55:05,420 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 16:55:05.419839
+2025-10-20 16:55:05,420 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 16:55:26,481 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 16:55:26,482 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 16:55:49,701 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 16:55:49,701 - AttendanceSystem - INFO - Synchronization completed in 44.28s - Success: 0, Errors: 2
+2025-10-20 16:55:49,701 - AttendanceSystem - WARNING - Consecutive errors: 4
+2025-10-20 16:56:49,730 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 16:56:49.730649
+2025-10-20 16:56:49,730 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 16:57:10,765 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 16:57:10,765 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 16:57:33,978 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 16:57:33,979 - AttendanceSystem - INFO - Synchronization completed in 44.25s - Success: 0, Errors: 2
+2025-10-20 16:57:33,980 - AttendanceSystem - WARNING - Consecutive errors: 5
+2025-10-20 16:57:33,981 - AttendanceSystem - ERROR - Too many consecutive errors, waiting before retry
+2025-10-20 17:03:34,017 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:03:34.017691
+2025-10-20 17:03:34,018 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:03:55,068 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:03:55,068 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:04:18,585 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:04:18,585 - AttendanceSystem - INFO - Synchronization completed in 44.57s - Success: 0, Errors: 2
+2025-10-20 17:04:18,586 - AttendanceSystem - WARNING - Consecutive errors: 1
+2025-10-20 17:05:18,618 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:05:18.618002
+2025-10-20 17:05:18,619 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:05:39,674 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:05:39,675 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:06:03,036 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:06:03,036 - AttendanceSystem - INFO - Synchronization completed in 44.42s - Success: 0, Errors: 2
+2025-10-20 17:06:03,037 - AttendanceSystem - WARNING - Consecutive errors: 2
+2025-10-20 17:07:03,079 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:07:03.079588
+2025-10-20 17:07:03,080 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:07:24,141 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:07:24,141 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:07:46,982 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:07:46,983 - AttendanceSystem - INFO - Synchronization completed in 43.90s - Success: 0, Errors: 2
+2025-10-20 17:07:46,983 - AttendanceSystem - WARNING - Consecutive errors: 3
+2025-10-20 17:08:47,030 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:08:47.030599
+2025-10-20 17:08:47,031 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:09:08,088 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:09:08,089 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:09:31,625 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:09:31,625 - AttendanceSystem - INFO - Synchronization completed in 44.59s - Success: 0, Errors: 2
+2025-10-20 17:09:31,625 - AttendanceSystem - WARNING - Consecutive errors: 4
+2025-10-20 17:10:31,663 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:10:31.662968
+2025-10-20 17:10:31,663 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:10:52,782 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:10:52,782 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:11:16,072 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:11:16,072 - AttendanceSystem - INFO - Synchronization completed in 44.41s - Success: 0, Errors: 2
+2025-10-20 17:11:16,073 - AttendanceSystem - WARNING - Consecutive errors: 5
+2025-10-20 17:11:16,073 - AttendanceSystem - ERROR - Too many consecutive errors, waiting before retry
+2025-10-20 17:17:16,116 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:17:16.115897
+2025-10-20 17:17:16,116 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:17:37,180 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:17:37,180 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:18:00,654 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:18:00,655 - AttendanceSystem - INFO - Synchronization completed in 44.54s - Success: 0, Errors: 2
+2025-10-20 17:18:00,655 - AttendanceSystem - WARNING - Consecutive errors: 1
+2025-10-20 17:19:00,689 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:19:00.689805
+2025-10-20 17:19:00,690 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:19:21,750 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:19:21,751 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:19:45,091 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:19:45,092 - AttendanceSystem - INFO - Synchronization completed in 44.40s - Success: 0, Errors: 2
+2025-10-20 17:19:45,092 - AttendanceSystem - WARNING - Consecutive errors: 2
+2025-10-20 17:20:45,126 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:20:45.125912
+2025-10-20 17:20:45,126 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:21:06,177 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:21:06,177 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:21:29,744 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:21:29,744 - AttendanceSystem - INFO - Synchronization completed in 44.62s - Success: 0, Errors: 2
+2025-10-20 17:21:29,744 - AttendanceSystem - WARNING - Consecutive errors: 3
+2025-10-20 17:22:29,788 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:22:29.788614
+2025-10-20 17:22:29,789 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:22:50,829 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:22:50,829 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:23:10,986 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:23:10,986 - AttendanceSystem - INFO - Synchronization completed in 41.20s - Success: 0, Errors: 2
+2025-10-20 17:23:10,986 - AttendanceSystem - WARNING - Consecutive errors: 4
+2025-10-20 17:24:11,033 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:24:11.033326
+2025-10-20 17:24:11,034 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:24:32,125 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:24:32,126 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:24:55,702 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:24:55,703 - AttendanceSystem - INFO - Synchronization completed in 44.67s - Success: 0, Errors: 2
+2025-10-20 17:24:55,703 - AttendanceSystem - WARNING - Consecutive errors: 5
+2025-10-20 17:24:55,703 - AttendanceSystem - ERROR - Too many consecutive errors, waiting before retry
+2025-10-20 17:30:55,738 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:30:55.738394
+2025-10-20 17:30:55,739 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:31:16,763 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:31:16,764 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:31:37,294 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:31:37,294 - AttendanceSystem - INFO - Synchronization completed in 41.56s - Success: 0, Errors: 2
+2025-10-20 17:31:37,295 - AttendanceSystem - WARNING - Consecutive errors: 1
+2025-10-20 17:32:37,332 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:32:37.332101
+2025-10-20 17:32:37,332 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:32:58,360 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:32:58,360 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:33:21,834 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:33:21,835 - AttendanceSystem - INFO - Synchronization completed in 44.50s - Success: 0, Errors: 2
+2025-10-20 17:33:21,835 - AttendanceSystem - WARNING - Consecutive errors: 2
+2025-10-20 17:34:21,870 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:34:21.869786
+2025-10-20 17:34:21,870 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:34:42,924 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:34:42,924 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:35:06,404 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:35:06,404 - AttendanceSystem - INFO - Synchronization completed in 44.53s - Success: 0, Errors: 2
+2025-10-20 17:35:06,404 - AttendanceSystem - WARNING - Consecutive errors: 3
+2025-10-20 17:36:06,462 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:36:06.462670
+2025-10-20 17:36:06,463 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:36:27,496 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:36:27,497 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:36:51,060 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:36:51,061 - AttendanceSystem - INFO - Synchronization completed in 44.60s - Success: 0, Errors: 2
+2025-10-20 17:36:51,061 - AttendanceSystem - WARNING - Consecutive errors: 4
+2025-10-20 17:37:51,095 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:37:51.095075
+2025-10-20 17:37:51,095 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:38:12,140 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:38:12,141 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:38:16,085 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:38:16,086 - AttendanceSystem - INFO - Synchronization completed in 24.99s - Success: 0, Errors: 2
+2025-10-20 17:38:16,086 - AttendanceSystem - WARNING - Consecutive errors: 5
+2025-10-20 17:38:16,086 - AttendanceSystem - ERROR - Too many consecutive errors, waiting before retry
+2025-10-20 17:44:16,119 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:44:16.119020
+2025-10-20 17:44:16,119 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:44:37,155 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:44:37,155 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:45:00,640 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:45:00,641 - AttendanceSystem - INFO - Synchronization completed in 44.52s - Success: 0, Errors: 2
+2025-10-20 17:45:00,641 - AttendanceSystem - WARNING - Consecutive errors: 1
+2025-10-20 17:46:00,688 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:46:00.688105
+2025-10-20 17:46:00,688 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:46:21,741 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:46:21,741 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:46:45,176 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:46:45,176 - AttendanceSystem - INFO - Synchronization completed in 44.49s - Success: 0, Errors: 2
+2025-10-20 17:46:45,177 - AttendanceSystem - WARNING - Consecutive errors: 2
+2025-10-20 17:47:45,217 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:47:45.217614
+2025-10-20 17:47:45,218 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:48:06,264 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:48:06,265 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:48:27,575 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:48:27,576 - AttendanceSystem - INFO - Synchronization completed in 42.36s - Success: 0, Errors: 2
+2025-10-20 17:48:27,576 - AttendanceSystem - WARNING - Consecutive errors: 3
+2025-10-20 17:49:27,608 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:49:27.608476
+2025-10-20 17:49:27,609 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:49:48,659 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:49:48,659 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:50:12,034 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:50:12,034 - AttendanceSystem - INFO - Synchronization completed in 44.43s - Success: 0, Errors: 2
+2025-10-20 17:50:12,035 - AttendanceSystem - WARNING - Consecutive errors: 4
+2025-10-20 17:51:12,067 - AttendanceSystem - INFO - Starting synchronization at 2025-10-20 17:51:12.066995
+2025-10-20 17:51:12,067 - AttendanceSystem - INFO - Processing HikVision device...
+2025-10-20 17:51:33,109 - AttendanceSystem - ERROR - Failed to connect to HikVision
+2025-10-20 17:51:33,110 - AttendanceSystem - INFO - Processing ZKTeco device...
+2025-10-20 17:51:56,388 - AttendanceSystem - ERROR - Failed to connect to ZKTeco
+2025-10-20 17:51:56,389 - AttendanceSystem - INFO - Synchronization completed in 44.32s - Success: 0, Errors: 2
+2025-10-20 17:51:56,389 - AttendanceSystem - WARNING - Consecutive errors: 5
+2025-10-20 17:51:56,389 - AttendanceSystem - ERROR - Too many consecutive errors, waiting before retry
+2025-10-20 17:56:56,390 - AttendanceSystem - INFO - Attendance system stopped gracefully
